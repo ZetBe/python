@@ -23,88 +23,80 @@ class SinglyLinkedList:
         print("None")
 
     def pushFront(self, key):
-        new_node = Node(key)
-        new_node.next = self.head
-        self.head = new_node
+        new = Node(key)
+        new.next = self.head
+        self.head = new
         self.size += 1
 
     def pushBack(self, key):
-        new_node = Node(key)
-        v = self.head
+        new = Node(key)
         if self.size == 0:
-            self.head = new_node
+            self.head = new
+
         else:
-            while v.next != None:
-                v.next
-            v.next = new_node
+            tail = self.head
+            while tail.next != None:
+                tail = tail.next
+            tail.next = new
         self.size += 1
 
     def popFront(self):
-        v = self.head
-        key = None
-        if self.size != 0:
-            key = v.key
-            self.head = v.next
+        now = None
+        if len(self) > 0:
+            now = self.head.key
+            self.head = self.head.next
             self.size -= 1
-        return key
+        return now
 
-    # head 노드의 값 리턴. empty list이면 None 리턴
-
-    def popBack(self):
-        front = self.head
-        back = None
-        backback = None
-        if self.size != 0:
-            while front != None:
-                backback, back, front = back, front, front.next
-            if self.head == front:
+    def popBack(self):  # tail 노드의 값 리턴. empty list이면 None 리턴
+        pre, tail = None, None
+        if len(self) > 0:
+            pre, tail = None, self.head
+            if len(self) > 1:
+                while tail.next != None:
+                    pre, tail = tail, tail.next
+            key = tail.key
+            if self.head == tail:
                 self.head = None
             else:
-                tail = front
-                key = back.key
-                backback.next = None
-
+                pre.next = tail.next
             self.size -= 1
             return key
         else:
             return None
 
-    # tail 노드의 값 리턴. empty list이면 None 리턴
-
-    def search(self, key):
+    def search(self, key):  # key 값을 저장된 노드 리턴. 없으면 None 리턴
         v = self.head
-        sear = False
+        if len(self) == 0:
+            return None
         while v != None:
             if v.key == key:
-                sear = True
                 return v
+                break
             v = v.next
-        if sear == False:
-            return None
+        return None
 
-    # key 값을 저장된 노드 리턴. 없으면 None 리턴
-
-    def remove(self, x):
-        v = self.head
-        front = v.next
-        sear = False
-        if v.key == x.key:
-            self.head = v.next
-            sear = True
+    def remove(self, x):  # 노드 x를 제거한 후 True리턴. 제거 실패면 False 리턴
+        v = self.head.next
+        pre = self.head
+        if x.key == None:
+            return False
+        if self.head == None:
+            return False
+        if pre.key == x.key:
+            if len(self) > 1:
+                self.head = self.head.next
+            else:
+                self.head = None
             self.size -= 1
             return True
-        while front != None:
-            if front.key == x.key:
-                v.next = front.next
-                sear = True
+        while v.next != None:
+            if v.key == x.key:
+                pre.next = v.next
                 self.size -= 1
                 return True
-            v = front
-            front = front.next
-        if sear == False:
-            return sear
-
-    # 노드 x를 제거한 후 True리턴. 제거 실패면 False 리턴
+            v, pre = v.next, v
+        return False
 
     def size(self):
         return self.size
